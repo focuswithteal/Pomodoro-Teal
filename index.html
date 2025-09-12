@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Teal</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .pomodoro-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHZoYmZ0azF0M2tjbnR3cmpleTUxOXJtN3J1c2dobnc1ODhyaHczaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RIFmRF4HZaHiSbDUEE/giphy.gif');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        
+        .timer {
+            font-size: 4rem;
+            margin: 20px 0;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            padding: 10px 15px;
+            font-size: 1rem;
+            background-color: rgba(0, 128, 128, 0.7);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: rgba(0, 128, 128, 1);
+        }
+        
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="pomodoro-container">
+        <h1>Pomodoro Teal</h1>
+        <div class="timer" id="timer">25:00</div>
+        
+        <div class="preset-buttons">
+            <button onclick="setTimer(5)">5 min</button>
+            <button onclick="setTimer(10)">10 min</button>
+            <button onclick="setTimer(25)">25 min</button>
+            <button onclick="setTimer(50)">50 min</button>
+        </div>
+        
+        <div class="controls">
+            <button id="startBtn" onclick="startTimer()">Iniciar</button>
+            <button id="pauseBtn" onclick="pauseTimer()" disabled>Pausar</button>
+            <button id="resetBtn" onclick="resetTimer()">Reiniciar</button>
+        </div>
+    </div>
+
+    <script>
+        let timer;
+        let timeLeft = 25 * 60; // 25 minutos en segundos
+        let isRunning = false;
+        const timerDisplay = document.getElementById('timer');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        
+        function updateDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        function setTimer(minutes) {
+            timeLeft = minutes * 60;
+            resetTimer();
+        }
+        
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                startBtn.disabled = true;
+                pauseBtn.disabled = false;
+                
+                timer = setInterval(() => {
+                    timeLeft--;
+                    updateDisplay();
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        isRunning = false;
+                        startBtn.disabled = false;
+                        pauseBtn.disabled = true;
+                        alert('¡Tiempo completado!');
+                    }
+                }, 1000);
+            }
+        }
+        
+        function pauseTimer() {
+            clearInterval(timer);
+            isRunning = false;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+        
+        function resetTimer() {
+            clearInterval(timer);
+            isRunning = false;
+            updateDisplay();
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+        
+        // Inicializar el display
+        updateDisplay();
+    </script>
+</body>
+</html>
