@@ -115,6 +115,19 @@
             margin: 15px 0;
             border-radius: 1px;
         }
+
+        .timer-complete {
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from {
+                color: white;
+            }
+            to {
+                color: #00cccc;
+            }
+        }
     </style>
 </head>
 <body>
@@ -137,7 +150,7 @@
         <div class="preset-btn" onclick="setTime(50)">50 min</div>
     </div>
 
-    <audio id="alarmSound">
+    <audio id="alarmSound" loop>
         <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
     </audio>
@@ -146,6 +159,7 @@
         <label for="volume">Volumen de alarma:</label>
         <input type="range" id="volume" min="0" max="1" step="0.1" value="0.7">
         <button onclick="testSound()">Probar sonido</button>
+        <button id="stopAlarmBtn" style="display: none;">Detener alarma</button>
     </div>
 </div>
 
@@ -153,11 +167,14 @@
     let timer;
     let timeLeft = 25 * 60; // 25 minutes in seconds
     let isRunning = false;
+    let alarmPlaying = false;
 
     const timerDisplay = document.getElementById('timer');
     const startBtn = document.getElementById('startBtn');
     const pauseBtn = document.getElementById('pauseBtn');
     const resetBtn = document.getElementById('resetBtn');
+    const stopAlarmBtn = document.getElementById('stopAlarmBtn');
+    const alarmSound = document.getElementById('alarmSound');
 
     // Format time as MM:SS
     function formatTime(seconds) {
@@ -171,12 +188,36 @@
         timerDisplay.textContent = formatTime(timeLeft);
     }
 
+    // Play alarm
+    function playAlarm() {
+        alarmSound.volume = document.getElementById('volume').value;
+        alarmSound.currentTime = 0;
+        alarmSound.play();
+        alarmPlaying = true;
+        stopAlarmBtn.style.display = 'inline-block';
+        timerDisplay.classList.add('timer-complete');
+    }
+
+    // Stop alarm
+    function stopAlarm() {
+        alarmSound.pause();
+        alarmSound.currentTime = 0;
+        alarmPlaying = false;
+        stopAlarmBtn.style.display = 'none';
+        timerDisplay.classList.remove('timer-complete');
+    }
+
     // Start timer
     function startTimer() {
         if (!isRunning) {
             isRunning = true;
             startBtn.disabled = true;
             pauseBtn.disabled = false;
+
+            // Si la alarma está sonando, deténgala al iniciar un nuevo ciclo
+            if (alarmPlaying) {
+                stopAlarm();
+            }
 
             timer = setInterval(() => {
                 timeLeft--;
@@ -187,14 +228,9 @@
                     isRunning = false;
                     startBtn.disabled = false;
                     pauseBtn.disabled = true;
-
-                    // Reproducir el sonido de alarma
-                    const alarm = document.getElementById('alarmSound');
-                    alarm.currentTime = 0;
-                    alarm.volume = document.getElementById('volume').value;
-                    alarm.play();
-
-                    alert('¡Tiempo completado!');
+                    
+                    // Reproducir el sonido de alarma sin detener el contador
+                    playAlarm();
                 }
             }, 1000);
         }
@@ -218,6 +254,11 @@
         updateDisplay();
         startBtn.disabled = false;
         pauseBtn.disabled = true;
+        
+        // Detener la alarma si está sonando
+        if (alarmPlaying) {
+            stopAlarm();
+        }
     }
 
     // Set custom time
@@ -225,26 +266,36 @@
         if (!isRunning) {
             timeLeft = minutes * 60;
             updateDisplay();
+            
+            // Detener la alarma si está sonando
+            if (alarmPlaying) {
+                stopAlarm();
+            }
         }
     }
 
     function testSound() {
-        const alarm = document.getElementById('alarmSound');
-        const volume = document.getElementById('volume').value;
-        alarm.volume = volume;
-        alarm.currentTime = 0;
-        alarm.play();
+        alarmSound.volume = document.getElementById('volume').value;
+        alarmSound.currentTime = 0;
+        alarmSound.play();
+        
+        // Detener el sonido después de 2 segundos para la prueba
+        setTimeout(() => {
+            alarmSound.pause();
+            alarmSound.currentTime = 0;
+        }, 2000);
     }
 
     // Actualizar el volumen cuando cambia
     document.getElementById('volume').addEventListener('change', function() {
-        document.getElementById('alarmSound').volume = this.value;
+        alarmSound.volume = this.value;
     });
 
     // Event listeners
     startBtn.addEventListener('click', startTimer);
     pauseBtn.addEventListener('click', pauseTimer);
     resetBtn.addEventListener('click', resetTimer);
+    stopAlarmBtn.addEventListener('click', stopAlarm);
 
     // Initialize display
     updateDisplay();
