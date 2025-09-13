@@ -77,6 +77,12 @@
             <button id="pauseBtn" onclick="pauseTimer()" disabled>Pausar</button>
             <button id="resetBtn" onclick="resetTimer()">Reiniciar</button>
         </div>
+        
+        <audio id="alarmSound">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" type="audio/mpeg">
+    Tu navegador no soporta el elemento de audio.
+</audio>
+
     </div>
 
     <script>
@@ -108,13 +114,20 @@
                     timeLeft--;
                     updateDisplay();
                     
-                    if (timeLeft <= 0) {
-                        clearInterval(timer);
-                        isRunning = false;
-                        startBtn.disabled = false;
-                        pauseBtn.disabled = true;
-                        alert('¡Tiempo completado!');
-                    }
+                   if (timeLeft <= 0) {
+    clearInterval(timer);
+    isRunning = false;
+    startBtn.disabled = false;
+    pauseBtn.disabled = true;
+    
+    // Reproducir el sonido de alarma
+    const alarm = document.getElementById('alarmSound');
+    alarm.currentTime = 0;
+    alarm.play();
+    
+    alert('¡Tiempo completado!');
+}
+
                 }, 1000);
             }
         }
