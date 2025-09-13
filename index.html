@@ -3,451 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue&family=Quicksand&family=Pacifico&family=Amatic+SC&family=Josefin+Sans&family=Mali&family=Caveat&display=swap" rel="stylesheet">
-
-    <title>Teal-doro Timer</title>
+    <title>Pomodoro Teal Timer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --teal-primary: #008080;
-            --teal-secondary: #005f5f;
-            --teal-light: #b2d8d8;
-            --bg-color: #f9f9f9;
-            --text-color: #333;
-            
-        }
-        
         body {
-            font-family: 'Comic Neue', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Comic Neue', cursive;
             margin: 0;
-            padding: 15px;
+            padding: 0;
+            height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
+            background: linear-gradient(135deg, #006666, #003333);
+            color: white;
         }
-        
-        .widget-container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            max-width: 350px;
-            width: 100%;
-        }
-        
-        .header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .logo {
-            margin-right: 10px;
-        }
-        
-        .logo img {
-            width: 40px;
-            height: auto;
-        }
-        
-        h1 {
-            color: var(--teal-primary);
-            margin: 0;
-            font-size: 1.5rem;
-        }
-        
-        .timer-display {
-            font-size: 3rem;
-            font-weight: bold;
+
+        .pomodoro-container {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             text-align: center;
-            margin: 15px 0;
-            color: var(--teal-primary);
+            width: 90%;
+            max-width: 400px;
         }
-        
+
+        h1 {
+            margin-top: 0;
+            color: #00cccc;
+            font-size: 28px;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .timer {
+            font-size: 60px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 0 0 10px rgba(0, 204, 204, 0.5);
+        }
+
         .controls {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
-        
+
         button {
-            background-color: var(--teal-primary);
-            color: white;
+            padding: 10px 20px;
             border: none;
             border-radius: 5px;
-            padding: 8px 15px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-        
-        button:hover {
-            background-color: var(--teal-secondary);
-        }
-        
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        
-        .presets {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .preset-btn {
-            background-color: var(--teal-light);
-            color: var(--text-color);
-            padding: 5px 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        
-        .preset-btn:hover {
-            background-color: var(--teal-primary);
+            background-color: rgba(0, 204, 204, 0.7);
             color: white;
+            font-family: 'Comic Neue', cursive;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        
-        .settings {
+
+        button:hover {
+            background-color: rgba(0, 153, 153, 0.9);
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background-color: rgba(100, 100, 100, 0.7);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .presets {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .preset-btn {
+            padding: 10px;
+            background-color: rgba(0, 102, 102, 0.7);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .preset-btn:hover {
+            background-color: rgba(0, 77, 77, 0.9);
+            transform: scale(1.05);
+        }
+
+        .sound-options {
             margin-top: 15px;
-        }
-        
-        .settings-row {
             display: flex;
             align-items: center;
-            margin-bottom: 8px;
+            gap: 10px;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .sound-options button {
+            padding: 5px 10px;
+            font-size: 0.8rem;
         }
         
-        .settings-row label {
-            flex: 1;
-            font-size: 0.9rem;
-        }
-        
-        .settings-row input, .settings-row select {
-            margin-left: 10px;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background-color: var(--teal-light);
-            border-radius: 4px;
-            margin-bottom: 15px;
-            overflow: hidden;
-        }
-        
-        .progress {
-            height: 100%;
-            background-color: var(--teal-primary);
-            width: 0%;
-            transition: width 1s linear;
-        }
-        
-        .cycle-counter {
-            text-align: center;
-            font-size: 0.9rem;
-            margin-top: 10px;
-            color: var(--teal-secondary);
-        }
-        
-        .mode-indicator {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: var(--teal-primary);
+        .divider {
+            height: 2px;
+            background-color: rgba(255, 255, 255, 0.3);
+            margin: 15px 0;
+            border-radius: 1px;
         }
     </style>
 </head>
 <body>
-    <div class="widget-container">
-        <div class="header">
-            <div class="logo">
-                <img src="https://imgur.com/gallery/teal-full-life-NgjaD2C" alt="Teal Full Life Logo">
-            </div>
-            <h1>Teal-doro Timer</h1>
-        </div>
-        
-        <div class="mode-indicator" id="modeDisplay">Modo: Trabajo</div>
-        
-        <div class="progress-bar">
-            <div class="progress" id="progressBar"></div>
-        </div>
-        
-        <div class="timer-display" id="timer">25:00</div>
-        
-        <div class="controls">
-            <button id="startBtn">Iniciar</button>
-            <button id="pauseBtn" disabled>Pausar</button>
-            <button id="resetBtn">Reiniciar</button>
-        </div>
-        
-        <div class="presets">
-            <button class="preset-btn" data-time="1">1 min</button>
-            <button class="preset-btn" data-time="15">15 min</button>
-            <button class="preset-btn" data-time="25">25 min</button>
-            <button class="preset-btn" data-time="5" data-type="break">Descanso 5 min</button>
-        </div>
-        
-        <div class="settings">
-            <div class="settings-row">
-                <label for="autoStart">Auto-iniciar ciclos:</label>
-                <input type="checkbox" id="autoStart">
-            </div>
-            <div class="settings-row">
-                <label for="cycles">Ciclos Pomodoro:</label>
-                <select id="cycles">
-                    <option value="1">1 ciclo</option>
-                    <option value="2">2 ciclos</option>
-                    <option value="4" selected>4 ciclos</option>
-                    <option value="6">6 ciclos</option>
-                    <option value="8">8 ciclos</option>
-                </select>
-            </div>
-            <div class="settings-row">
-                <label for="volume">Volumen:</label>
-                <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5">
-            </div>
-        </div>
-        
-        <div class="cycle-counter">
-            Ciclo <span id="currentCycle">0</span>/<span id="totalCycles">4</span> completados
-        </div>
-    </div>
+<div class="pomodoro-container">
+    <h1>Pomodoro Teal Timer</h1>
+    <div class="divider"></div>
     
+    <div class="timer" id="timer">25:00</div>
+
+    <div class="controls">
+        <button id="startBtn">Start</button>
+        <button id="pauseBtn" disabled>Pause</button>
+        <button id="resetBtn">Reset</button>
+    </div>
+
+    <div class="presets">
+        <div class="preset-btn" onclick="setTime(5)">5 min</div>
+        <div class="preset-btn" onclick="setTime(10)">10 min</div>
+        <div class="preset-btn" onclick="setTime(25)">25 min</div>
+        <div class="preset-btn" onclick="setTime(50)">50 min</div>
+    </div>
+
     <audio id="alarmSound">
         <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
     </audio>
     
-    <script>
-        // Elementos DOM
-        const timerDisplay = document.getElementById('timer');
-        const startBtn = document.getElementById('startBtn');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const presetBtns = document.querySelectorAll('.preset-btn');
-        const progressBar = document.getElementById('progressBar');
-        const modeDisplay = document.getElementById('modeDisplay');
-        const autoStartCheck = document.getElementById('autoStart');
-        const cyclesSelect = document.getElementById('cycles');
-        const currentCycleDisplay = document.getElementById('currentCycle');
-        const totalCyclesDisplay = document.getElementById('totalCycles');
-        const alarm = document.getElementById('alarmSound');
-        
-        // Variables del temporizador
-        let timeLeft = 25 * 60; // 25 minutos en segundos
-        let totalTime = timeLeft;
-        let timerId;
-        let isRunning = false;
-        let isWorkMode = true;
-        let currentCycle = 0;
-        let totalCycles = parseInt(cyclesSelect.value);
-        
-        // Actualizar el display de ciclos totales
-        totalCyclesDisplay.textContent = totalCycles;
-        
-        // Función para formatear tiempo en MM:SS
-        function formatTime(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    <div class="sound-options">
+        <label for="volume">Volumen de alarma:</label>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="0.7">
+        <button onclick="testSound()">Probar sonido</button>
+    </div>
+</div>
+
+<script>
+    let timer;
+    let timeLeft = 25 * 60; // 25 minutes in seconds
+    let isRunning = false;
+
+    const timerDisplay = document.getElementById('timer');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    // Format time as MM:SS
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Update timer display
+    function updateDisplay() {
+        timerDisplay.textContent = formatTime(timeLeft);
+    }
+
+    // Start timer
+    function startTimer() {
+        if (!isRunning) {
+            isRunning = true;
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+
+            timer = setInterval(() => {
+                timeLeft--;
+                updateDisplay();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    isRunning = false;
+                    startBtn.disabled = false;
+                    pauseBtn.disabled = true;
+
+                    // Reproducir el sonido de alarma
+                    const alarm = document.getElementById('alarmSound');
+                    alarm.currentTime = 0;
+                    alarm.volume = document.getElementById('volume').value;
+                    alarm.play();
+
+                    alert('¡Tiempo completado!');
+                }
+            }, 1000);
         }
-        
-        // Función para actualizar el display del temporizador
-        function updateTimerDisplay() {
-            timerDisplay.textContent = formatTime(timeLeft);
-            const progress = ((totalTime - timeLeft) / totalTime) * 100;
-            progressBar.style.width = `${progress}%`;
-            updateTitle(formatTime(timeLeft));
-        }
-        
-        // Función para actualizar el título de la pestaña
-        function updateTitle(timeString) {
-            document.title = `${timeString} - Teal-doro`;
-        }
-        
-        // Función para iniciar el temporizador
-        function startTimer() {
-            if (!isRunning) {
-                isRunning = true;
-                startBtn.disabled = true;
-                pauseBtn.disabled = false;
-                
-                timerId = setInterval(() => {
-                    if (timeLeft > 0) {
-                        timeLeft--;
-                        updateTimerDisplay();
-                    } else {
-                        clearInterval(timerId);
-                        playShortAlarm();
-                        
-                        if (isWorkMode) {
-                            // Completó un ciclo de trabajo
-                            currentCycle++;
-                            currentCycleDisplay.textContent = currentCycle;
-                            
-                            if (currentCycle < totalCycles) {
-                                // Cambiar a modo descanso
-                                if (autoStartCheck.checked) {
-                                    switchToBreak();
-                                } else {
-                                    resetTimer();
-                                    isRunning = false;
-                                    startBtn.disabled = false;
-                                    pauseBtn.disabled = true;
-                                }
-                            } else {
-                                // Todos los ciclos completados
-                                resetTimer();
-                                showNotification('¡Completado!', 'Has terminado todos los ciclos Pomodoro.');
-                            }
-                        } else {
-                            // Completó un descanso, volver a modo trabajo
-                            if (autoStartCheck.checked) {
-                                switchToWork();
-                            } else {
-                                resetTimer();
-                                isRunning = false;
-                                startBtn.disabled = false;
-                                pauseBtn.disabled = true;
-                            }
-                        }
-                    }
-                }, 1000);
-            }
-        }
-        
-        // Función para pausar el temporizador
-        function pauseTimer() {
-            if (isRunning) {
-                clearInterval(timerId);
-                isRunning = false;
-                startBtn.disabled = false;
-                pauseBtn.disabled = true;
-            }
-        }
-        
-        // Función para reiniciar el temporizador
-        function resetTimer() {
-            clearInterval(timerId);
-            timeLeft = isWorkMode ? 25 * 60 : 5 * 60;
-            totalTime = timeLeft;
+    }
+
+    // Pause timer
+    function pauseTimer() {
+        if (isRunning) {
+            clearInterval(timer);
             isRunning = false;
             startBtn.disabled = false;
             pauseBtn.disabled = true;
-            updateTimerDisplay();
         }
-        
-        // Función para cambiar a modo descanso
-        function switchToBreak() {
-            isWorkMode = false;
-            timeLeft = 5 * 60; // 5 minutos de descanso
-            totalTime = timeLeft;
-            modeDisplay.textContent = "Modo: Descanso";
-            modeDisplay.style.color = "#28a745"; // Verde para descanso
-            updateTimerDisplay();
-            
-            if (autoStartCheck.checked) {
-                startTimer();
-            }
+    }
+
+    // Reset timer
+    function resetTimer() {
+        clearInterval(timer);
+        isRunning = false;
+        timeLeft = 25 * 60; // Reset to 25 minutes
+        updateDisplay();
+        startBtn.disabled = false;
+        pauseBtn.disabled = true;
+    }
+
+    // Set custom time
+    function setTime(minutes) {
+        if (!isRunning) {
+            timeLeft = minutes * 60;
+            updateDisplay();
         }
-        
-        // Función para cambiar a modo trabajo
-        function switchToWork() {
-            isWorkMode = true;
-            timeLeft = 25 * 60; // 25 minutos de trabajo
-            totalTime = timeLeft;
-            modeDisplay.textContent = "Modo: Trabajo";
-            modeDisplay.style.color = "var(--teal-primary)"; // Teal para trabajo
-            updateTimerDisplay();
-            
-            if (autoStartCheck.checked) {
-                startTimer();
-            }
-        }
-        
-        // Función para reproducir alarma corta
-        function playShortAlarm() {
-            const alarm = document.getElementById('alarmSound');
-            alarm.volume = document.getElementById('volume').value;
-            alarm.currentTime = 0;
-            alarm.play();
-            
-            // Detener el sonido después de 1 segundo
-            setTimeout(() => {
-                alarm.pause();
-                alarm.currentTime = 0;
-            }, 1000);
-        }
-        
-        // Función para mostrar notificaciones
-        function showNotification(title, message) {
-            if (Notification.permission === 'granted') {
-                new Notification(title, {
-                    body: message,
-                    icon: 'https://i.imgur.com/NgjaD2C.png'
-                });
-            } else if (Notification.permission !== 'denied') {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        showNotification(title, message);
-                    }
-                });
-            }
-        }
-        
-        // Event Listeners
-        startBtn.addEventListener('click', startTimer);
-        pauseBtn.addEventListener('click', pauseTimer);
-        resetBtn.addEventListener('click', resetTimer);
-        
-        // Event Listener para botones de presets
-        presetBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const minutes = parseInt(btn.dataset.time);
-                const type = btn.dataset.type;
-                
-                clearInterval(timerId);
-                isRunning = false;
-                startBtn.disabled = false;
-                pauseBtn.disabled = true;
-                
-                if (type === 'break') {
-                    isWorkMode = false;
-                    modeDisplay.textContent = "Modo: Descanso";
-                    modeDisplay.style.color = "#28a745";
-                } else {
-                    isWorkMode = true;
-                    modeDisplay.textContent = "Modo: Trabajo";
-                    modeDisplay.style.color = "var(--teal-primary)";
-                }
-                
-                timeLeft = minutes * 60;
-                totalTime = timeLeft;
-                updateTimerDisplay();
-            });
-        });
-        
-        // Event Listener para selector de ciclos
-        cyclesSelect.addEventListener('change', () => {
-            totalCycles = parseInt(cyclesSelect.value);
-            totalCyclesDisplay.textContent = totalCycles;
-        });
-        
-        // Solicitar permiso para notificaciones al cargar
-        document.addEventListener('DOMContentLoaded', () => {
-            if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-                Notification.requestPermission();
-            }
-            updateTimerDisplay();
-        });
-    </script>
+    }
+
+    function testSound() {
+        const alarm = document.getElementById('alarmSound');
+        const volume = document.getElementById('volume').value;
+        alarm.volume = volume;
+        alarm.currentTime = 0;
+        alarm.play();
+    }
+
+    // Actualizar el volumen cuando cambia
+    document.getElementById('volume').addEventListener('change', function() {
+        document.getElementById('alarmSound').volume = this.value;
+    });
+
+    // Event listeners
+    startBtn.addEventListener('click', startTimer);
+    pauseBtn.addEventListener('click', pauseTimer);
+    resetBtn.addEventListener('click', resetTimer);
+
+    // Initialize display
+    updateDisplay();
+</script>
 </body>
 </html>
