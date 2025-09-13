@@ -1,109 +1,177 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pomodoro Teal</title>
+    <title>Pomodoro Teal Timer</title>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
+        body {
             font-family: 'Arial', sans-serif;
-        }
-        
-        .pomodoro-container {
-            width: 100%;
-            height: 100%;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-image: url('https://drive.google.com/file/d/15g-RUsyCO4wsyB2zN0CbkGWi2faVS3iV/view?usp=sharing');
+            height: 100vh;
+            margin: 0;
+            background-color: #008080;
+            background-image: url('https://drive.google.com/uc?export=view&id=15g-RUsyCO4wsyB2zN0CbkGWi2faVS3iV');
             background-size: cover;
             background-position: center;
             color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
-        
+
+        .pomodoro-container {
+            background-color: rgba(0, 128, 128, 0.7);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 350px;
+            backdrop-filter: blur(5px);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #ffffff;
+            font-size: 2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            margin-bottom: 15px;
+        }
+
+        .logo img {
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
         .timer {
             font-size: 4rem;
             margin: 20px 0;
+            font-weight: bold;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
-        
+
         .controls {
             display: flex;
             justify-content: center;
             gap: 10px;
             margin-bottom: 20px;
         }
-        
+
         button {
-            padding: 10px 15px;
+            padding: 10px 20px;
             font-size: 1rem;
-            background-color: rgba(0, 128, 128, 0.7);
+            background-color: #006666;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        
+
         button:hover {
-            background-color: rgba(0, 128, 128, 1);
+            background-color: #004c4c;
         }
-        
-        .preset-buttons {
-            display: flex;
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .presets {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
-            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        .preset-btn {
+            padding: 10px;
+            background-color: rgba(0, 102, 102, 0.7);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .preset-btn:hover {
+            background-color: rgba(0, 77, 77, 0.9);
+            transform: scale(1.05);
+        }
+
+        .sound-options {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .sound-options button {
+            padding: 5px 10px;
+            font-size: 0.8rem;
         }
     </style>
 </head>
 <body>
     <div class="pomodoro-container">
-        <h1>Pomodoro Teal</h1>
-        <div class="timer" id="timer">25:00</div>
-        
-        <div class="preset-buttons">
-            <button onclick="setTimer(5)">5 min</button>
-            <button onclick="setTimer(10)">10 min</button>
-            <button onclick="setTimer(25)">25 min</button>
-            <button onclick="setTimer(50)">50 min</button>
+        <h1>Pomodoro Teal Timer</h1>
+        <div class="logo">
+            <img src="https://drive.google.com/uc?export=view&id=15g-RUsyCO4wsyB2zN0CbkGWi2faVS3iV" alt="Teal Logo" width="100">
         </div>
         
+        <div class="timer" id="timer">25:00</div>
+        
         <div class="controls">
-            <button id="startBtn" onclick="startTimer()">Iniciar</button>
-            <button id="pauseBtn" onclick="pauseTimer()" disabled>Pausar</button>
-            <button id="resetBtn" onclick="resetTimer()">Reiniciar</button>
+            <button id="startBtn">Start</button>
+            <button id="pauseBtn" disabled>Pause</button>
+            <button id="resetBtn">Reset</button>
+        </div>
+        
+        <div class="presets">
+            <div class="preset-btn" onclick="setTime(5)">5 min</div>
+            <div class="preset-btn" onclick="setTime(10)">10 min</div>
+            <div class="preset-btn" onclick="setTime(25)">25 min</div>
+            <div class="preset-btn" onclick="setTime(50)">50 min</div>
         </div>
         
         <audio id="alarmSound">
-    <source src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" type="audio/mpeg">
-    Tu navegador no soporta el elemento de audio.
-</audio>
-
+            <source src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" type="audio/mpeg">
+            Tu navegador no soporta el elemento de audio.
+        </audio>
+        
+        <div class="sound-options">
+            <label for="volume">Volumen de alarma:</label>
+            <input type="range" id="volume" min="0" max="1" step="0.1" value="0.7">
+            <button onclick="testSound()">Probar sonido</button>
+        </div>
     </div>
 
     <script>
         let timer;
-        let timeLeft = 25 * 60; // 25 minutos en segundos
+        let timeLeft = 25 * 60; // 25 minutes in seconds
         let isRunning = false;
+        
         const timerDisplay = document.getElementById('timer');
         const startBtn = document.getElementById('startBtn');
         const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
         
+        // Format time as MM:SS
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // Update timer display
         function updateDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            timerDisplay.textContent = formatTime(timeLeft);
         }
         
-        function setTimer(minutes) {
-            timeLeft = minutes * 60;
-            resetTimer();
-        }
-        
+        // Start timer
         function startTimer() {
             if (!isRunning) {
                 isRunning = true;
@@ -114,40 +182,71 @@
                     timeLeft--;
                     updateDisplay();
                     
-                   if (timeLeft <= 0) {
-    clearInterval(timer);
-    isRunning = false;
-    startBtn.disabled = false;
-    pauseBtn.disabled = true;
-    
-    // Reproducir el sonido de alarma
-    const alarm = document.getElementById('alarmSound');
-    alarm.currentTime = 0;
-    alarm.play();
-    
-    alert('¡Tiempo completado!');
-}
-
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        isRunning = false;
+                        startBtn.disabled = false;
+                        pauseBtn.disabled = true;
+                        
+                        // Reproducir el sonido de alarma
+                        const alarm = document.getElementById('alarmSound');
+                        alarm.currentTime = 0;
+                        alarm.volume = document.getElementById('volume').value;
+                        alarm.play();
+                        
+                        alert('¡Tiempo completado!');
+                    }
                 }, 1000);
             }
         }
         
+        // Pause timer
         function pauseTimer() {
-            clearInterval(timer);
-            isRunning = false;
-            startBtn.disabled = false;
-            pauseBtn.disabled = true;
+            if (isRunning) {
+                clearInterval(timer);
+                isRunning = false;
+                startBtn.disabled = false;
+                pauseBtn.disabled = true;
+            }
         }
         
+        // Reset timer
         function resetTimer() {
             clearInterval(timer);
             isRunning = false;
+            timeLeft = 25 * 60; // Reset to 25 minutes
             updateDisplay();
             startBtn.disabled = false;
             pauseBtn.disabled = true;
         }
         
-        // Inicializar el display
+        // Set custom time
+        function setTime(minutes) {
+            if (!isRunning) {
+                timeLeft = minutes * 60;
+                updateDisplay();
+            }
+        }
+        
+        function testSound() {
+            const alarm = document.getElementById('alarmSound');
+            const volume = document.getElementById('volume').value;
+            alarm.volume = volume;
+            alarm.currentTime = 0;
+            alarm.play();
+        }
+
+        // Actualizar el volumen cuando cambia
+        document.getElementById('volume').addEventListener('change', function() {
+            document.getElementById('alarmSound').volume = this.value;
+        });
+        
+        // Event listeners
+        startBtn.addEventListener('click', startTimer);
+        pauseBtn.addEventListener('click', pauseTimer);
+        resetBtn.addEventListener('click', resetTimer);
+        
+        // Initialize display
         updateDisplay();
     </script>
 </body>
